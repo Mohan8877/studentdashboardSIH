@@ -7,6 +7,10 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Card, CardContent } from "@/components/ui/card"
 import { ArrowLeft, ArrowRight, CheckCircle, Clock, Lock, Play, Search, Star } from "lucide-react"
 import { FloatingChatbot } from "@/components/floating-chatbot"
+import BinaryBlaster from "./BinaryBlaster"
+import Shapes from "./Shapes"
+import PeriodicTable from "./PeriodicTable"
+
 
 const StudentDashboard = () => {
   type CurrentView =
@@ -641,154 +645,150 @@ const StudentDashboard = () => {
     )
   }
 
-  const GamingSection = () => {
-    const [selectedSubject, setSelectedSubject] = useState<string | null>(null)
+  const GamingSection = ({ handleBackToDashboard, selectedSubject, setSelectedSubject, setCurrentView }: any) => {
+  const subjects = [
+    { name: "Mathematics", icon: "📊", color: "blue", progress: 75, gamesCompleted: 12, totalGames: 16 },
+    { name: "Physics", icon: "⚡", color: "purple", progress: 60, gamesCompleted: 9, totalGames: 15 },
+    { name: "Chemistry", icon: "🧪", color: "green", progress: 45, gamesCompleted: 7, totalGames: 14 },
+    { name: "Biology", icon: "🧬", color: "emerald", progress: 80, gamesCompleted: 16, totalGames: 20 },
+    { name: "Computer Science", icon: "💻", color: "indigo", progress: 90, gamesCompleted: 18, totalGames: 20 },
+    { name: "General STEM", icon: "🔬", color: "pink", progress: 55, gamesCompleted: 11, totalGames: 18 },
+  ]
 
-    const subjects = [
-      { name: "Mathematics", icon: "📊", color: "blue", progress: 75, gamesCompleted: 12, totalGames: 16 },
-      { name: "Physics", icon: "⚡", color: "purple", progress: 60, gamesCompleted: 9, totalGames: 15 },
-      { name: "Chemistry", icon: "🧪", color: "green", progress: 45, gamesCompleted: 7, totalGames: 14 },
-      { name: "Biology", icon: "🧬", color: "emerald", progress: 80, gamesCompleted: 16, totalGames: 20 },
-      { name: "Computer Science", icon: "💻", color: "indigo", progress: 90, gamesCompleted: 18, totalGames: 20 },
-      { name: "General STEM", icon: "🔬", color: "pink", progress: 55, gamesCompleted: 11, totalGames: 18 },
-    ]
-
-    const games = [
+  const subjectGames = {
+    "Mathematics": [
       { name: "Algebra Adventure", difficulty: "Easy", xp: 50, locked: false, completed: true },
+        { name: "Shapes", difficulty: "Medium", xp: 95, locked: false, completed: false },     
       { name: "Geometry Quest", difficulty: "Medium", xp: 75, locked: false, completed: true },
       { name: "Calculus Challenge", difficulty: "Hard", xp: 100, locked: false, completed: false },
       { name: "Statistics Safari", difficulty: "Medium", xp: 80, locked: true, completed: false },
       { name: "Trigonometry Tower", difficulty: "Hard", xp: 120, locked: true, completed: false },
-    ]
-
-    if (selectedSubject) {
-      return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-6">
-          <div className="max-w-6xl mx-auto">
-            <button
-              onClick={() => setSelectedSubject(null)}
-              className="mb-6 flex items-center gap-2 text-indigo-600 hover:text-indigo-700 transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              Back to Subjects
-            </button>
-
-            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-8 rounded-2xl mb-8">
-              <h1 className="text-4xl font-bold mb-2">{selectedSubject} Games</h1>
-              <p className="text-indigo-100">Master concepts through interactive gameplay!</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {games.map((game, index) => (
-                <div
-                  key={index}
-                  className={`bg-white rounded-xl shadow-lg p-6 border-2 transition-all hover:scale-105 ${
-                    game.locked
-                      ? "border-gray-200 opacity-60"
-                      : game.completed
-                        ? "border-green-300 bg-green-50"
-                        : "border-indigo-200 hover:border-indigo-300"
-                  }`}
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-xl font-bold text-gray-800">{game.name}</h3>
-                    {game.locked && <Lock className="w-5 h-5 text-gray-400" />}
-                    {game.completed && <CheckCircle className="w-5 h-5 text-green-500" />}
-                  </div>
-
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Difficulty:</span>
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          game.difficulty === "Easy"
-                            ? "bg-green-100 text-green-700"
-                            : game.difficulty === "Medium"
-                              ? "bg-yellow-100 text-yellow-700"
-                              : "bg-red-100 text-red-700"
-                        }`}
-                      >
-                        {game.difficulty}
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">XP Reward:</span>
-                      <span className="font-bold text-indigo-600">{game.xp} XP</span>
-                    </div>
-
-                    <button
-                      className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
-                        game.locked
-                          ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                          : game.completed
-                            ? "bg-green-500 text-white"
-                            : "bg-indigo-500 text-white hover:bg-indigo-600"
-                      }`}
-                      disabled={game.locked}
-                    >
-                      {game.locked ? "Locked" : game.completed ? "Completed" : "Play Now"}
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )
+    ],
+    "Physics": [
+        { name: "Newton's Laws Lab", difficulty: "Easy", xp: 60, locked: false, completed: true },
+        { name: "Quantum Leap", difficulty: "Hard", xp: 150, locked: true, completed: false },
+        { name: "Circuit Builder", difficulty: "Medium", xp: 85, locked: false, completed: false },
+        { name: "Light Spectrum Puzzle", difficulty: "Easy", xp: 55, locked: false, completed: true },
+    ],
+    "Chemistry": [
+        { name: "Molecule Matcher", difficulty: "Easy", xp: 50, locked: false, completed: true },
+        { name: "Periodic Table", difficulty: "Medium", xp: 70, locked: false, completed: false },
+        { name: "Balancing Equations", difficulty: "Hard", xp: 110, locked: true, completed: false },
+    ],
+    "Biology": [
+        { name: "Cell Explorer", difficulty: "Easy", xp: 50, locked: false, completed: true },
+        { name: "DNA Sequencer", difficulty: "Medium", xp: 90, locked: false, completed: false },
+        { name: "Ecosystem Builder", difficulty: "Hard", xp: 130, locked: true, completed: false },
+        { name: "Frog Dissection Sim", difficulty: "Hard", xp: 150, locked: true, completed: false },
+    ],
+    "Computer Science": [
+        { name: "Binary Blaster", difficulty: "Medium", xp: 65, locked: false, completed: false },
+        { name: "Code Debugger", difficulty: "Hard", xp: 125, locked: false, completed: false },
+        { name: "SQL Sleuth", difficulty: "Hard", xp: 140, locked: true, completed: false },
+    ],
+    "General STEM": [
+        { name: "Lab Safety Sim", difficulty: "Easy", xp: 40, locked: false, completed: true },
+        { name: "Unit Converter", difficulty: "Medium", xp: 60, locked: false, completed: false },
+        { name: "Data Viz Dash", difficulty: "Medium", xp: 80, locked: true, completed: false },
+    ],
+  };
+  
+  const handlePlayGame = (game: any) => {
+    if (game.locked) return;
+    if (game.name === 'Binary Blaster') {
+      // Navigate to Binary Blaster game
+      setCurrentView('binary-blaster');
+    } else if (game.name === 'Shapes') {
+      // Navigate to Shapes game
+      setCurrentView('shapes');
+    } else if (game.name === 'Periodic Table') {
+      // Navigate to Periodic Table game
+      setCurrentView('periodic-table');
+    } else {
+      // Placeholder for other games
+      alert(`Starting ${game.name}! (Navigation not yet implemented)`);
     }
+  };
 
+  // Mapping object to ensure Tailwind CSS generates the correct classes
+  const colorVariants: { [key: string]: string } = {
+    blue: 'from-blue-500 to-blue-600',
+    purple: 'from-purple-500 to-purple-600',
+    green: 'from-green-500 to-green-600',
+    emerald: 'from-emerald-500 to-emerald-600',
+    indigo: 'from-indigo-500 to-indigo-600',
+    pink: 'from-pink-500 to-pink-600',
+  };
+
+  if (selectedSubject) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-6">
-        <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-6 font-sans">
+        <div className="max-w-6xl mx-auto">
           <button
-            onClick={() => setCurrentView("dashboard")}
+            onClick={() => setSelectedSubject(null)}
             className="mb-6 flex items-center gap-2 text-indigo-600 hover:text-indigo-700 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
-            Back to Dashboard
+            Back to Subjects
           </button>
 
           <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-8 rounded-2xl mb-8">
-            <h1 className="text-4xl font-bold mb-4">Gaming Arcade</h1>
-            <p className="text-indigo-100 text-lg">Learn through play! Choose your subject and start your adventure.</p>
+            <h1 className="text-4xl font-bold mb-2">{selectedSubject} Games</h1>
+            <p className="text-indigo-100">Master concepts through interactive gameplay!</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {subjects.map((subject, index) => (
+  {(subjectGames[selectedSubject as keyof typeof subjectGames] || []).map((game: any, index: number) => (
               <div
                 key={index}
-                onClick={() => setSelectedSubject(subject.name)}
-                className={`bg-gradient-to-br from-${subject.color}-500 to-${subject.color}-600 text-white p-6 rounded-xl cursor-pointer hover:scale-105 transition-all shadow-lg hover:shadow-xl`}
+                className={`bg-white rounded-xl shadow-lg p-6 border-2 transition-all hover:scale-105 ${
+                  game.locked
+                    ? "border-gray-200 opacity-60"
+                    : game.completed
+                      ? "border-green-300 bg-green-50"
+                      : "border-indigo-200 hover:border-indigo-300"
+                }`}
               >
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-4xl">{subject.icon}</span>
-                  <div className="text-right">
-                    <div className="text-sm opacity-90">Progress</div>
-                    <div className="text-2xl font-bold">{subject.progress}%</div>
-                  </div>
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="text-xl font-bold text-gray-800">{game.name}</h3>
+                  {game.locked && <Lock className="w-5 h-5 text-gray-400" />}
+                  {game.completed && <CheckCircle className="w-5 h-5 text-green-500" />}
                 </div>
 
-                <h3 className="text-xl font-bold mb-2">{subject.name}</h3>
-
-                <div className="mb-4">
-                  <div className="flex justify-between text-sm opacity-90 mb-1">
-                    <span>Games Completed</span>
-                    <span>
-                      {subject.gamesCompleted}/{subject.totalGames}
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Difficulty:</span>
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        game.difficulty === "Easy"
+                          ? "bg-green-100 text-green-700"
+                          : game.difficulty === "Medium"
+                            ? "bg-yellow-100 text-yellow-700"
+                            : "bg-red-100 text-red-700"
+                      }`}
+                    >
+                      {game.difficulty}
                     </span>
                   </div>
-                  <div className="w-full bg-white/20 rounded-full h-2">
-                    <div
-                      className="bg-white rounded-full h-2 transition-all duration-500"
-                      style={{ width: `${subject.progress}%` }}
-                    ></div>
-                  </div>
-                </div>
 
-                <div className="flex items-center justify-between">
-                  <span className="text-sm opacity-90">Click to explore</span>
-                  <ArrowRight className="w-5 h-5" />
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">XP Reward:</span>
+                    <span className="font-bold text-indigo-600">{game.xp} XP</span>
+                  </div>
+
+                  <button
+                    onClick={() => handlePlayGame(game)}
+                    className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
+                      game.locked
+                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                        : game.completed
+                          ? "bg-green-500 text-white"
+                          : "bg-indigo-500 text-white hover:bg-indigo-600"
+                    }`}
+                    disabled={game.locked}
+                  >
+                    {game.locked ? "Locked" : game.completed ? "Review" : "Play Now"}
+                  </button>
                 </div>
               </div>
             ))}
@@ -797,6 +797,331 @@ const StudentDashboard = () => {
       </div>
     )
   }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-6 font-sans">
+      <div className="max-w-7xl mx-auto">
+        <button
+          onClick={handleBackToDashboard}
+          className="mb-6 flex items-center gap-2 text-indigo-600 hover:text-indigo-700 transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          Back to Dashboard
+        </button>
+
+        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-8 rounded-2xl mb-8">
+          <h1 className="text-4xl font-bold mb-4">Gaming Arcade</h1>
+          <p className="text-indigo-100 text-lg">Learn through play! Choose your subject and start your adventure.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {subjects.map((subject, index) => (
+            <div
+              key={index}
+              onClick={() => setSelectedSubject(subject.name)}
+              className={`bg-gradient-to-br ${colorVariants[subject.color]} text-white p-6 rounded-xl cursor-pointer hover:scale-105 transition-all shadow-lg hover:shadow-xl`}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-4xl">{subject.icon}</span>
+                <div className="text-right">
+                  <div className="text-sm opacity-90">Progress</div>
+                  <div className="text-2xl font-bold">{subject.progress}%</div>
+                </div>
+              </div>
+
+              <h3 className="text-xl font-bold mb-2">{subject.name}</h3>
+
+              <div className="mb-4">
+                <div className="flex justify-between text-sm opacity-90 mb-1">
+                  <span>Games Completed</span>
+                  <span>
+                    {subject.gamesCompleted}/{subject.totalGames}
+                  </span>
+                </div>
+                <div className="w-full bg-white/20 rounded-full h-2">
+                  <div
+                    className="bg-white rounded-full h-2 transition-all duration-500"
+                    style={{ width: `${subject.progress}%` }}
+                  ></div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-sm opacity-90">Click to explore</span>
+                <ArrowRight className="w-5 h-5" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const LearningSection = ({ handleBackToDashboard, selectedSubject, setSelectedSubject, selectedTopic, setSelectedTopic }: any) => {
+  const subjects = [
+    { name: "Mathematics", icon: "📊", color: "blue", topics: 24, completed: 18 },
+    { name: "Physics", icon: "⚡", color: "purple", topics: 20, completed: 12 },
+    { name: "Chemistry", icon: "🧪", color: "green", topics: 18, completed: 10 },
+    { name: "Biology", icon: "🧬", color: "emerald", topics: 22, completed: 16 },
+    { name: "Computer Science", icon: "💻", color: "indigo", topics: 26, completed: 20 },
+    { name: "General STEM", icon: "🔬", color: "pink", topics: 15, completed: 8 },
+  ]
+
+  const topics = [
+    { name: "Linear Equations", difficulty: "Beginner", duration: "15 min", xp: 50, completed: true },
+    { name: "Quadratic Functions", difficulty: "Intermediate", duration: "25 min", xp: 75, completed: true },
+    { name: "Calculus Basics", difficulty: "Advanced", duration: "35 min", xp: 100, completed: false },
+    { name: "Statistics", difficulty: "Intermediate", duration: "20 min", xp: 80, completed: false },
+  ]
+  
+  const colorVariants: { [key: string]: string } = {
+    blue: 'from-blue-500 to-blue-600',
+    purple: 'from-purple-500 to-purple-600',
+    green: 'from-green-500 to-green-600',
+    emerald: 'from-emerald-500 to-emerald-600',
+    indigo: 'from-indigo-500 to-indigo-600',
+    pink: 'from-pink-500 to-pink-600',
+  };
+
+  if (selectedTopic) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-6">
+        <div className="max-w-4xl mx-auto">
+          <button
+            onClick={() => setSelectedTopic(null)}
+            className="mb-6 flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            Back to Topics
+          </button>
+
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            {/* Video Section */}
+            <div className="bg-gray-900 aspect-video flex items-center justify-center">
+              <div className="text-center text-white">
+                <Play className="w-16 h-16 mx-auto mb-4 opacity-80" />
+                <p className="text-lg">Interactive Video: {selectedTopic}</p>
+                <p className="text-sm opacity-70">Click to start learning</p>
+              </div>
+            </div>
+
+            {/* Content Section */}
+            <div className="p-8">
+              <div className="flex justify-between items-start mb-6">
+                <div>
+                  <h1 className="text-3xl font-bold text-gray-800 mb-2">{selectedTopic}</h1>
+                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-4 h-4" />
+                      25 min
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Star className="w-4 h-4" />
+                      75 XP
+                    </span>
+                    <span className="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs">Intermediate</span>
+                  </div>
+                </div>
+                <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                  Mark Complete
+                </button>
+              </div>
+
+              {/* Learning Content */}
+              <div className="prose max-w-none mb-8">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">What you'll learn:</h3>
+                <ul className="space-y-2 text-gray-700">
+                  <li>• Understanding the fundamental concepts</li>
+                  <li>• Practical applications and examples</li>
+                  <li>• Problem-solving techniques</li>
+                  <li>• Real-world connections</li>
+                </ul>
+              </div>
+
+              {/* Interactive Exploration */}
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl mb-8">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">Interactive Exploration</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Adjust Parameter A: <span className="font-bold">5</span>
+                    </label>
+                    <input type="range" min="1" max="10" defaultValue="5" className="w-full" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Adjust Parameter B: <span className="font-bold">3</span>
+                    </label>
+                    <input type="range" min="1" max="10" defaultValue="3" className="w-full" />
+                  </div>
+                  <div className="bg-white p-4 rounded-lg border-2 border-dashed border-gray-300 text-center">
+                    <p className="text-gray-600">Interactive visualization will appear here</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quiz Section */}
+              <div className="bg-green-50 p-6 rounded-xl">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">Quick Quiz</h3>
+                <div className="space-y-4">
+                  <div>
+                    <p className="font-medium text-gray-800 mb-3">What is the result of 2x + 3 when x = 5?</p>
+                    <div className="space-y-2">
+                      {["10", "13", "15", "8"].map((option, index) => (
+                        <label key={index} className="flex items-center gap-2 cursor-pointer">
+                          <input type="radio" name="quiz1" value={option} className="text-green-500" />
+                          <span className="text-gray-700">{option}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  <button className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors">
+                    Submit Answer (+25 XP)
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (selectedSubject) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-6">
+        <div className="max-w-6xl mx-auto">
+          <button
+            onClick={() => setSelectedSubject(null)}
+            className="mb-6 flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            Back to Subjects
+          </button>
+
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-8 rounded-2xl mb-8">
+            <h1 className="text-4xl font-bold mb-2">{selectedSubject} Topics</h1>
+            <p className="text-blue-100">Explore comprehensive lessons and interactive content</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {topics.map((topic, index) => (
+              <div
+                key={index}
+                onClick={() => setSelectedTopic(topic.name)}
+                className={`bg-white rounded-xl shadow-lg p-6 cursor-pointer hover:scale-105 transition-all border-2 ${
+                  topic.completed ? "border-green-300 bg-green-50" : "border-blue-200 hover:border-blue-300"
+                }`}
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="text-xl font-bold text-gray-800">{topic.name}</h3>
+                  {topic.completed && <CheckCircle className="w-5 h-5 text-green-500" />}
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-600">Difficulty:</span>
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        topic.difficulty === "Beginner"
+                          ? "bg-green-100 text-green-700"
+                          : topic.difficulty === "Intermediate"
+                            ? "bg-yellow-100 text-yellow-700"
+                            : "bg-red-100 text-red-700"
+                      }`}
+                    >
+                      {topic.difficulty}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-600">Duration:</span>
+                    <span className="font-medium">{topic.duration}</span>
+                  </div>
+
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-600">XP Reward:</span>
+                    <span className="font-bold text-blue-600">{topic.xp} XP</span>
+                  </div>
+
+                  <button
+                    className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
+                      topic.completed ? "bg-green-500 text-white" : "bg-blue-500 text-white hover:bg-blue-600"
+                    }`}
+                  >
+                    {topic.completed ? "Review" : "Start Learning"}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        <button
+          onClick={handleBackToDashboard}
+          className="mb-6 flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          Back to Dashboard
+        </button>
+
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-8 rounded-2xl mb-8">
+          <h1 className="text-4xl font-bold mb-4">Learning Hub</h1>
+          <p className="text-blue-100 text-lg">
+            Comprehensive lessons, interactive content, and hands-on learning experiences.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {subjects.map((subject, index) => (
+            <div
+              key={index}
+              onClick={() => setSelectedSubject(subject.name)}
+              className={`bg-gradient-to-br ${colorVariants[subject.color]} text-white p-6 rounded-xl cursor-pointer hover:scale-105 transition-all shadow-lg hover:shadow-xl`}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-4xl">{subject.icon}</span>
+                <div className="text-right">
+                  <div className="text-sm opacity-90">Progress</div>
+                  <div className="text-2xl font-bold">{Math.round((subject.completed / subject.topics) * 100)}%</div>
+                </div>
+              </div>
+
+              <h3 className="text-xl font-bold mb-2">{subject.name}</h3>
+
+              <div className="mb-4">
+                <div className="flex justify-between text-sm opacity-90 mb-1">
+                  <span>Topics Completed</span>
+                  <span>
+                    {subject.completed}/{subject.topics}
+                  </span>
+                </div>
+                <div className="w-full bg-white/20 rounded-full h-2">
+                  <div
+                    className="bg-white rounded-full h-2 transition-all duration-500"
+                    style={{ width: `${(subject.completed / subject.topics) * 100}%` }}
+                  ></div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-sm opacity-90">Start learning</span>
+                <ArrowRight className="w-5 h-5" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
 
   const LearningSection = () => {
     const [selectedSubject, setSelectedSubject] = useState<string | null>(null)
