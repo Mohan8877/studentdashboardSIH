@@ -1,649 +1,18 @@
+ 
+
 "use client"
 
-import { useState } from "react"
+import React, { useState } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Card, CardContent } from "@/components/ui/card"
 import { ArrowLeft, ArrowRight, CheckCircle, Clock, Lock, Play, Search, Star } from "lucide-react"
-import { FloatingChatbot } from "@/components/floating-chatbot"
 import BinaryBlaster from "./BinaryBlaster"
 import Shapes from "./Shapes"
 import PeriodicTable from "./PeriodicTable"
+import { FloatingChatbot } from "@/components/floating-chatbot"
 
-
-const StudentDashboard = () => {
-  type CurrentView =
-    | "dashboard"
-    | "community"
-    | "gaming"
-    | "learning"
-    | "leaderboard"
-    | "streak"
-    | "profile"
-    | "achievements"
-    | "settings"
-  const [currentView, setCurrentView] = useState<CurrentView>("dashboard")
-  const [streak, setStreak] = useState(5)
-  const [points, setPoints] = useState(1200)
-  const [selectedSubject, setSelectedSubject] = useState<string | null>(null)
-  const [selectedTopic, setSelectedTopic] = useState<string | null>(null)
-  const [leaderboardRegion, setLeaderboardRegion] = useState("Local")
-  const [leaderboardSort, setLeaderboardSort] = useState("XP")
-  const [challengeMode, setChallengeMode] = useState<"1v1" | "4v4" | "reasoning" | "tournaments">("1v1")
-  const [selectedChallengeSubject, setSelectedChallengeSubject] = useState<string | null>(null)
-  const [matchmakingState, setMatchmakingState] = useState<"idle" | "searching" | "found" | "playing">("idle")
-
-  const dashboardCards = [
-    {
-      id: "gaming",
-      title: "Gaming Section",
-      icon: "🎮",
-      description: "Interactive STEM games",
-      gradient: "from-blue-600 via-purple-600 to-blue-700",
-      hoverGradient: "from-blue-500 via-purple-500 to-blue-600",
-    },
-    {
-      id: "learning",
-      title: "Learning Section",
-      icon: "📘",
-      description: "Lessons, quizzes & progress",
-      gradient: "from-green-600 via-emerald-600 to-green-700",
-      hoverGradient: "from-green-500 via-emerald-500 to-green-600",
-    },
-    {
-      id: "community",
-      title: "Community Section",
-      icon: "💬",
-      description: "Discussions & peer sharing",
-      gradient: "from-orange-600 via-red-600 to-orange-700",
-      hoverGradient: "from-orange-500 via-red-500 to-orange-600",
-    },
-    {
-      id: "challenges",
-      title: "Challenges Section",
-      icon: "⚡",
-      description: "Weekly quests & badges",
-      gradient: "from-purple-600 via-pink-600 to-purple-700",
-      hoverGradient: "from-purple-500 via-pink-500 to-purple-600",
-    },
-  ]
-
-  const handleCardClick = (cardId: string) => {
-    console.log(`[v0] Navigating to ${cardId} section`)
-    if (cardId === "community") {
-      setCurrentView("community")
-    }
-    if (cardId === "gaming") {
-      setCurrentView("gaming")
-    }
-    if (cardId === "learning") {
-      setCurrentView("learning")
-    }
-    if (cardId === "challenges") {
-      setCurrentView("challenges")
-    }
-  }
-
-  const handleBackToDashboard = () => {
-    setCurrentView("dashboard")
-    setSelectedSubject(null)
-    setSelectedTopic(null)
-  }
-
-  const handleLeaderboardClick = () => {
-    setCurrentView("leaderboard")
-  }
-
-  const handleStreakClick = () => {
-    setCurrentView("streak")
-  }
-
-  const handleProfileClick = () => {
-    console.log("[v0] Profile clicked, current setCurrentView:", typeof setCurrentView)
-    setCurrentView("profile")
-  }
-
-  const handleXPClick = () => {
-    console.log("[v0] XP clicked, current setCurrentView:", typeof setCurrentView)
-    // For now, just show profile since XP view isn't implemented
-    setCurrentView("profile")
-  }
-
-  const handleAchievementsClick = () => {
-    console.log("[v0] Achievements clicked, current setCurrentView:", typeof setCurrentView)
-    setCurrentView("achievements")
-  }
-
-  const handleSettingsClick = () => {
-    console.log("[v0] Settings clicked")
-    // For now, just show an alert - can be expanded later
-    alert("Settings functionality coming soon!")
-  }
-
-  const handleLogoutClick = () => {
-    console.log("[v0] Logout clicked")
-    if (confirm("Are you sure you want to logout?")) {
-      alert("Logout functionality coming soon!")
-    }
-  }
-
-  const renderAchievementsPage = () => {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-4 mb-6">
-            <Button
-              variant="ghost"
-              onClick={() => setCurrentView("dashboard")}
-              className="flex items-center gap-2 text-slate-600 hover:text-slate-800"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Dashboard
-            </Button>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
-            <h1 className="text-2xl font-bold text-slate-800 mb-6 text-center">🏆 Trophy Cabinet</h1>
-
-            <div className="grid md:grid-cols-3 gap-6">
-              <Card className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200">
-                <CardContent className="p-6 text-center">
-                  <div className="text-4xl mb-3">🥇</div>
-                  <h3 className="font-semibold text-slate-800 mb-2">Math Master</h3>
-                  <p className="text-sm text-slate-600">Complete 50 math problems</p>
-                  <div className="mt-3 text-xs text-yellow-700 font-medium">UNLOCKED</div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
-                <CardContent className="p-6 text-center">
-                  <div className="text-4xl mb-3">🔬</div>
-                  <h3 className="font-semibold text-slate-800 mb-2">Science Explorer</h3>
-                  <p className="text-sm text-slate-600">Complete 25 science experiments</p>
-                  <div className="mt-3 text-xs text-green-700 font-medium">UNLOCKED</div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-slate-50 to-slate-100 border-slate-200">
-                <CardContent className="p-6 text-center">
-                  <div className="text-4xl mb-3 opacity-50">🎯</div>
-                  <h3 className="font-semibold text-slate-800 mb-2">Perfect Score</h3>
-                  <p className="text-sm text-slate-600">Get 100% on any test</p>
-                  <div className="mt-3 text-xs text-slate-500 font-medium">LOCKED</div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  const renderProfilePage = () => {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-4 mb-6">
-            <Button
-              variant="ghost"
-              onClick={() => setCurrentView("dashboard")}
-              className="flex items-center gap-2 text-slate-600 hover:text-slate-800"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Dashboard
-            </Button>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
-            <div className="text-center">
-              <Avatar className="w-24 h-24 mx-auto mb-4 ring-4 ring-blue-500/20">
-                <AvatarImage src="/student-avatar.png" alt="Student" />
-                <AvatarFallback className="bg-slate-700 text-white text-2xl font-semibold">ST</AvatarFallback>
-              </Avatar>
-              <h1 className="text-2xl font-bold text-slate-800 mb-2">Sarah Thompson</h1>
-              <p className="text-slate-600 mb-6">Class 9 • 1,200 XP • Level 12</p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="font-semibold text-slate-800 mb-4">Academic Progress</h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-600">Mathematics</span>
-                      <span className="font-semibold text-blue-600">92%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-600">Science</span>
-                      <span className="font-semibold text-green-600">88%</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-600">English</span>
-                      <span className="font-semibold text-purple-600">85%</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="font-semibold text-slate-800 mb-4">Recent Activity</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                      <span className="text-slate-600 text-sm">Completed Math Quiz</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <span className="text-slate-600 text-sm">Earned Science Badge</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                      <span className="text-slate-600 text-sm">7-day streak achieved</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  const renderStreakDashboardPage = () => {
-    const currentDate = new Date()
-    const currentMonth = currentDate.getMonth()
-    const currentYear = currentDate.getFullYear()
-    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
-    const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay()
-
-    // Generate calendar days with streak status
-    const calendarDays = []
-    const streakData = {
-      1: "completed",
-      2: "completed",
-      3: "partial",
-      4: "completed",
-      5: "completed",
-      6: "missed",
-      7: "completed",
-      8: "completed",
-      9: "completed",
-      10: "partial",
-      11: "completed",
-      12: "completed",
-      13: "completed",
-      14: "missed",
-      15: "completed",
-    }
-
-    // Add empty cells for days before month starts
-    for (let i = 0; i < firstDayOfMonth; i++) {
-      calendarDays.push(<div key={`empty-${i}`} className="h-10"></div>)
-    }
-
-    // Add days of the month
-    for (let day = 1; day <= daysInMonth; day++) {
-      const status = streakData[day] || "future"
-      const isToday = day === currentDate.getDate()
-
-      let dayClass =
-        "h-10 w-10 rounded-lg flex items-center justify-center text-sm font-medium transition-all duration-200 "
-      let icon = ""
-
-      if (status === "completed") {
-        dayClass += "bg-orange-100 text-orange-700 border-2 border-orange-300"
-        icon = "🔥"
-      } else if (status === "partial") {
-        dayClass += "bg-blue-100 text-blue-700 border-2 border-blue-300"
-        icon = "🌙"
-      } else if (status === "missed") {
-        dayClass += "bg-red-100 text-red-700 border-2 border-red-300"
-        icon = "❌"
-      } else {
-        dayClass += "bg-gray-100 text-gray-500"
-      }
-
-      if (isToday) {
-        dayClass += " ring-2 ring-purple-400 ring-offset-2"
-      }
-
-      calendarDays.push(
-        <div key={day} className={dayClass}>
-          <div className="flex flex-col items-center">
-            <span className="text-xs">{day}</span>
-            {icon && <span className="text-xs">{icon}</span>}
-          </div>
-        </div>,
-      )
-    }
-
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 p-6">
-        <div className="max-w-6xl mx-auto">
-          <button
-            onClick={() => setCurrentView("dashboard")}
-            className="mb-6 flex items-center gap-2 text-orange-600 hover:text-orange-700 transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Back to Dashboard
-          </button>
-
-          {/* Header */}
-          <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white p-8 rounded-2xl mb-8">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-4xl font-bold mb-2">Streak Dashboard</h1>
-                <p className="text-orange-100">Keep the momentum going! Every day counts.</p>
-              </div>
-              <div className="text-center">
-                <div className="text-6xl font-bold mb-2">{streak}</div>
-                <div className="text-orange-200">Current Streak</div>
-              </div>
-            </div>
-            <div className="mt-6 flex items-center gap-8">
-              <div className="text-center">
-                <div className="text-2xl font-bold">21</div>
-                <div className="text-sm text-orange-200">Best Streak</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold">67%</div>
-                <div className="text-sm text-orange-200">This Month</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Calendar and Weekly Progress */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Monthly Calendar */}
-            <div className="bg-white rounded-2xl p-6 shadow-xl">
-              <h2 className="text-2xl font-bold text-slate-800 mb-4 text-center">
-                {new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })}
-              </h2>
-
-              {/* Calendar Header */}
-              <div className="grid grid-cols-7 gap-2 mb-4">
-                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-                  <div key={day} className="text-center text-sm font-medium text-slate-600 py-2">
-                    {day}
-                  </div>
-                ))}
-              </div>
-
-              {/* Calendar Grid */}
-              <div className="grid grid-cols-7 gap-2 mb-6">{calendarDays}</div>
-
-              {/* Legend */}
-              <div className="space-y-2 text-sm">
-                <div className="flex items-center space-x-2">
-                  <span>🔥</span>
-                  <span className="text-slate-600">Full streak day</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span>🌙</span>
-                  <span className="text-slate-600">Partial streak</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span>❌</span>
-                  <span className="text-slate-600">Missed day</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Weekly Progress */}
-            <div className="space-y-6">
-              <div className="bg-white rounded-2xl p-6 shadow-xl">
-                <h2 className="text-2xl font-bold text-slate-800 mb-4">This Week</h2>
-
-                <div className="flex justify-between items-center mb-4">
-                  {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day, index) => {
-                    const isCompleted = index < 5
-                    return (
-                      <div key={day} className="flex flex-col items-center space-y-2">
-                        <div className="text-xs text-slate-600">{day}</div>
-                        <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                            isCompleted ? "bg-orange-100 text-orange-600" : "bg-gray-100 text-gray-400"
-                          }`}
-                        >
-                          {isCompleted ? "🔥" : "○"}
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-
-                <div className="bg-gradient-to-r from-orange-400 to-red-500 rounded-full h-3 mb-4">
-                  <div
-                    className="bg-gradient-to-r from-orange-500 to-red-600 h-3 rounded-full"
-                    style={{ width: "71%" }}
-                  ></div>
-                </div>
-
-                <p className="text-center text-slate-600 font-medium">2 more days to unlock Weekly Bonus Badge! 🏅</p>
-              </div>
-
-              {/* Rules Section */}
-              <div className="bg-white rounded-2xl p-6 shadow-xl">
-                <h2 className="text-2xl font-bold text-slate-800 mb-4">How Streaks Work</h2>
-
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <span className="text-2xl">🎥</span>
-                    <div>
-                      <div className="font-medium text-slate-800">Watch at least 1 learning video</div>
-                      <div className="text-sm text-slate-600">Complete any lesson video</div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-3">
-                    <span className="text-2xl">🎮</span>
-                    <div>
-                      <div className="font-medium text-slate-800">Play STEM games for 30+ minutes</div>
-                      <div className="text-sm text-slate-600">Any combination of games counts</div>
-                    </div>
-                  </div>
-
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-4">
-                    <h3 className="font-bold text-yellow-800 mb-2">Rewards:</h3>
-                    <ul className="space-y-1 text-sm text-yellow-700">
-                      <li>• +2 XP for 5-day streak</li>
-                      <li>• +10 XP and Badge for 7-day streak</li>
-                      <li>• Golden Badge for 30-day streak</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Streak Badges */}
-          <div className="bg-white rounded-2xl p-6 shadow-xl">
-            <h2 className="text-2xl font-bold text-slate-800 mb-6 text-center">Streak Achievements</h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center p-4 bg-gradient-to-br from-orange-100 to-red-100 rounded-xl border-2 border-orange-200">
-                <div className="text-4xl mb-2">🔥</div>
-                <div className="font-bold text-slate-800">5-Day Streak</div>
-                <div className="text-sm text-slate-600">Unlocked!</div>
-                <div className="text-xs text-orange-600 mt-1">+2 XP Bonus</div>
-              </div>
-
-              <div className="text-center p-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl border-2 border-gray-300 opacity-60">
-                <div className="text-4xl mb-2">🏅</div>
-                <div className="font-bold text-slate-800">7-Day Streak</div>
-                <div className="text-sm text-slate-600">2 days to go</div>
-                <div className="text-xs text-gray-600 mt-1">+10 XP + Badge</div>
-              </div>
-
-              <div className="text-center p-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl border-2 border-gray-300 opacity-60">
-                <div className="text-4xl mb-2">👑</div>
-                <div className="font-bold text-slate-800">30-Day Streak</div>
-                <div className="text-sm text-slate-600">25 days to go</div>
-                <div className="text-xs text-gray-600 mt-1">Golden Badge</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  const CommunitySection = () => {
-    const [setCurrentView] = useState<
-      | "dashboard"
-      | "community"
-      | "gaming"
-      | "learning"
-      | "leaderboard"
-      | "streak"
-      | "profile"
-      | "achievements"
-      | "settings"
-    >("dashboard")
-
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="mb-8">
-            <button
-              onClick={() => setCurrentView("dashboard")}
-              className="mb-6 flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              Back to Dashboard
-            </button>
-
-            <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-8 rounded-2xl">
-              <h1 className="text-4xl font-bold mb-4">Community Hub</h1>
-              <p className="text-purple-100 mb-6">Connect, collaborate, and learn together!</p>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="Search communities, discussions, or members..."
-                  className="w-full pl-10 pr-4 py-3 rounded-lg text-gray-900 placeholder-gray-500"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* My Communities */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">My Communities</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                { name: "Math Wizards", members: 1234, color: "blue", activity: "High" },
-                { name: "Science Squad", members: 856, color: "green", activity: "Medium" },
-                { name: "Code Creators", members: 2341, color: "purple", activity: "High" },
-              ].map((community, index) => (
-                <div
-                  key={index}
-                  className={`bg-gradient-to-br from-${community.color}-500 to-${community.color}-600 text-white p-6 rounded-xl hover:scale-105 transition-transform cursor-pointer`}
-                >
-                  <h3 className="text-xl font-bold mb-2">{community.name}</h3>
-                  <p className="text-sm opacity-90 mb-4">{community.members} members</p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs bg-white/20 px-2 py-1 rounded-full">Activity: {community.activity}</span>
-                    <ArrowRight className="w-5 h-5" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Recommended Communities */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Recommended Communities</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {[
-                { name: "Physics Lab", members: 567, subject: "Physics" },
-                { name: "Chemistry Club", members: 432, subject: "Chemistry" },
-                { name: "Biology Buffs", members: 789, subject: "Biology" },
-                { name: "History Heroes", members: 345, subject: "History" },
-              ].map((community, index) => (
-                <div
-                  key={index}
-                  className="bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow cursor-pointer border border-gray-100"
-                >
-                  <h3 className="font-bold text-gray-800 mb-2">{community.name}</h3>
-                  <p className="text-sm text-gray-600 mb-3">{community.members} members</p>
-                  <span className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">{community.subject}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Trending Communities */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Trending Communities</h2>
-            <div className="bg-white rounded-xl shadow-md p-6">
-              <div className="space-y-4">
-                {[
-                  { name: "AI & Machine Learning", members: 3456, trend: "+234 this week", icon: "🤖" },
-                  { name: "Environmental Science", members: 2134, trend: "+156 this week", icon: "🌱" },
-                  { name: "Creative Writing", members: 1876, trend: "+98 this week", icon: "✍️" },
-                ].map((community, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
-                  >
-                    <div className="flex items-center gap-4">
-                      <span className="text-2xl">{community.icon}</span>
-                      <div>
-                        <h3 className="font-bold text-gray-800">{community.name}</h3>
-                        <p className="text-sm text-gray-600">{community.members} members</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-sm text-green-600 font-medium">{community.trend}</span>
-                      <ArrowRight className="w-4 h-4 text-gray-400 mt-1" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Community Challenges */}
-          <div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Community Challenges</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[
-                {
-                  title: "Math Marathon",
-                  description: "Solve 100 problems this month",
-                  participants: 456,
-                  reward: "500 XP",
-                  timeLeft: "12 days left",
-                },
-                {
-                  title: "Science Fair Prep",
-                  description: "Share your experiment ideas",
-                  participants: 234,
-                  reward: "300 XP",
-                  timeLeft: "5 days left",
-                },
-              ].map((challenge, index) => (
-                <div key={index} className="bg-gradient-to-r from-orange-400 to-red-500 text-white p-6 rounded-xl">
-                  <h3 className="text-xl font-bold mb-2">{challenge.title}</h3>
-                  <p className="text-orange-100 mb-4">{challenge.description}</p>
-                  <div className="flex justify-between items-center text-sm">
-                    <span>{challenge.participants} participants</span>
-                    <span className="bg-white/20 px-2 py-1 rounded-full">{challenge.reward}</span>
-                  </div>
-                  <p className="text-xs text-orange-200 mt-2">{challenge.timeLeft}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
 
 const GamingSection = ({ handleBackToDashboard, selectedSubject, setSelectedSubject, setCurrentView }: any) => {
   const subjects = [
@@ -1123,259 +492,1072 @@ const LearningSection = ({ handleBackToDashboard, selectedSubject, setSelectedSu
   )
 }
 
-  const LearningSection = () => {
-    const [selectedSubject, setSelectedSubject] = useState<string | null>(null)
-    const [selectedTopic, setSelectedTopic] = useState<string | null>(null)
+const CommunitySection = ({ handleBackToDashboard }: any) => {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-6">
+      <div className="max-w-6xl mx-auto">
+        <button
+          onClick={handleBackToDashboard}
+          className="mb-6 flex items-center gap-2 text-green-600 hover:text-green-700 transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          Back to Dashboard
+        </button>
 
-    const subjects = [
-      { name: "Mathematics", icon: "📊", color: "blue", topics: 24, completed: 18 },
-      { name: "Physics", icon: "⚡", color: "purple", topics: 20, completed: 12 },
-      { name: "Chemistry", icon: "🧪", color: "green", topics: 18, completed: 10 },
-      { name: "Biology", icon: "🧬", color: "emerald", topics: 22, completed: 16 },
-      { name: "Computer Science", icon: "💻", color: "indigo", topics: 26, completed: 20 },
-      { name: "General STEM", icon: "🔬", color: "pink", topics: 15, completed: 8 },
+        <div className="bg-gradient-to-r from-green-600 to-blue-600 text-white p-8 rounded-2xl mb-8">
+          <h1 className="text-4xl font-bold mb-4">Community Hub</h1>
+          <p className="text-green-100 text-lg">Connect with fellow learners and share your progress!</p>
+        </div>
+
+        <div className="text-center">
+          <p className="text-gray-600">Community features coming soon...</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const StudentDashboard = () => {
+  const [streak, setStreak] = useState(5)
+  const [points, setPoints] = useState(1200)
+  const [currentView, setCurrentView] = useState("dashboard")
+  const [selectedSubject, setSelectedSubject] = useState<string | null>(null)
+  const [selectedTopic, setSelectedTopic] = useState<string | null>(null)
+  const [leaderboardRegion, setLeaderboardRegion] = useState("Local")
+  const [leaderboardSort, setLeaderboardSort] = useState("XP")
+  const [challengeMode, setChallengeMode] = useState("1v1")
+  const [selectedChallengeSubject, setSelectedChallengeSubject] = useState<string | null>(null)
+  const [matchmakingState, setMatchmakingState] = useState("idle")
+
+  const dashboardCards = [
+    {
+      id: "gaming",
+      title: "Gaming Section",
+      icon: "🎮",
+      description: "Interactive STEM games",
+      gradient: "from-blue-600 via-purple-600 to-blue-700",
+      hoverGradient: "from-blue-500 via-purple-500 to-blue-600",
+    },
+    {
+      id: "learning",
+      title: "Learning Section",
+      icon: "📘",
+      description: "Lessons, quizzes & progress",
+      gradient: "from-green-600 via-emerald-600 to-green-700",
+      hoverGradient: "from-green-500 via-emerald-500 to-green-600",
+    },
+    {
+      id: "community",
+      title: "Community Section",
+      icon: "💬",
+      description: "Discussions & peer sharing",
+      gradient: "from-orange-600 via-red-600 to-orange-700",
+      hoverGradient: "from-orange-500 via-red-500 to-orange-600",
+    },
+    {
+      id: "challenges",
+      title: "Challenges Section",
+      icon: "⚡",
+      description: "Weekly quests & badges",
+      gradient: "from-purple-600 via-pink-600 to-purple-700",
+      hoverGradient: "from-purple-500 via-pink-500 to-purple-600",
+    },
+  ]
+
+  const handleCardClick = (cardId: any) => {
+    console.log(`[v0] Navigating to ${cardId} section`)
+    if (cardId === "community") {
+      setCurrentView("community")
+    }
+    if (cardId === "gaming") {
+      setCurrentView("gaming")
+    }
+    if (cardId === "learning") {
+      setCurrentView("learning")
+    }
+    if (cardId === "challenges") {
+      setCurrentView("challenges")
+    }
+  }
+
+  const handleBackToDashboard = () => {
+    setCurrentView("dashboard")
+    setSelectedSubject(null)
+    setSelectedTopic(null)
+  }
+
+  const handleLeaderboardClick = () => {
+    setCurrentView("leaderboard")
+  }
+
+  const handleStreakClick = () => {
+    setCurrentView("streak")
+  }
+
+  const handleProfileClick = () => {
+    setCurrentView("profile")
+  }
+
+  const handleXPClick = () => {
+    setCurrentView("xp")
+  }
+
+  const handleAchievementsClick = () => {
+    setCurrentView("achievements")
+  }
+
+  const handleSettingsClick = () => {
+    // For now, just show an alert - can be expanded later
+    alert("Settings functionality coming soon!")
+  }
+
+  const handleLogoutClick = () => {
+    // Removed confirm dialog as it's often blocked in modern browsers.
+    // A custom modal would be a better UX in a real app.
+    alert("Logout functionality coming soon!")
+  }
+
+  const renderAchievementsPage = () => {
+    const achievementCategories = [
+      {
+        name: "Streak 🔥",
+        achievements: [
+          {
+            id: 1,
+            title: "First Steps",
+            description: "Complete your first day",
+            xp: 50,
+            unlocked: true,
+            date: "2024-01-15",
+          },
+          {
+            id: 2,
+            title: "Week Warrior",
+            description: "Maintain a 7-day streak",
+            xp: 200,
+            unlocked: true,
+            date: "2024-01-22",
+          },
+          {
+            id: 3,
+            title: "Month Master",
+            description: "Maintain a 30-day streak",
+            xp: 1000,
+            unlocked: false,
+            date: null,
+          },
+        ],
+      },
+      {
+        name: "XP ⭐",
+        achievements: [
+          {
+            id: 4,
+            title: "Point Collector",
+            description: "Earn your first 100 XP",
+            xp: 25,
+            unlocked: true,
+            date: "2024-01-10",
+          },
+          {
+            id: 5,
+            title: "XP Champion",
+            description: "Reach 1000 XP total",
+            xp: 100,
+            unlocked: true,
+            date: "2024-01-20",
+          },
+          { id: 6, title: "XP Legend", description: "Reach 5000 XP total", xp: 500, unlocked: false, date: null },
+        ],
+      },
+      {
+        name: "Subjects 📘",
+        achievements: [
+          {
+            id: 7,
+            title: "Math Wizard",
+            description: "Complete 10 math topics",
+            xp: 300,
+            unlocked: true,
+            date: "2024-01-18",
+          },
+          {
+            id: 8,
+            title: "Physics Explorer",
+            description: "Complete 5 physics experiments",
+            xp: 250,
+            unlocked: false,
+            date: null,
+          },
+          {
+            id: 9,
+            title: "Chemistry Master",
+            description: "Complete all chemistry basics",
+            xp: 400,
+            unlocked: false,
+            date: null,
+          },
+        ],
+      },
+      {
+        name: "Challenges ⚔️",
+        achievements: [
+          {
+            id: 10,
+            title: "First Victory",
+            description: "Win your first 1v1 challenge",
+            xp: 150,
+            unlocked: true,
+            date: "2024-01-12",
+          },
+          {
+            id: 11,
+            title: "Team Player",
+            description: "Win a 4v4 team challenge",
+            xp: 300,
+            unlocked: false,
+            date: null,
+          },
+          {
+            id: 12,
+            title: "Reasoning Pro",
+            description: "Excel in reasoning challenges",
+            xp: 200,
+            unlocked: false,
+            date: null,
+          },
+        ],
+      },
+      {
+        name: "Community 💬",
+        achievements: [
+          {
+            id: 13,
+            title: "Social Butterfly",
+            description: "Make 5 friends",
+            xp: 100,
+            unlocked: true,
+            date: "2024-01-14",
+          },
+          { id: 14, title: "Helper", description: "Help 10 students", xp: 250, unlocked: false, date: null },
+          {
+            id: 15,
+            title: "Community Leader",
+            description: "Lead a study group",
+            xp: 500,
+            unlocked: false,
+            date: null,
+          },
+        ],
+      },
+      {
+        name: "Special 🎉",
+        achievements: [
+          { id: 16, title: "Early Bird", description: "Study before 7 AM", xp: 75, unlocked: true, date: "2024-01-16" },
+          { id: 17, title: "Night Owl", description: "Study after 10 PM", xp: 75, unlocked: false, date: null },
+          { id: 18, title: "Weekend Warrior", description: "Study on weekends", xp: 100, unlocked: false, date: null },
+        ],
+      },
     ]
 
-    const topics = [
-      { name: "Linear Equations", difficulty: "Beginner", duration: "15 min", xp: 50, completed: true },
-      { name: "Quadratic Functions", difficulty: "Intermediate", duration: "25 min", xp: 75, completed: true },
-      { name: "Calculus Basics", difficulty: "Advanced", duration: "35 min", xp: 100, completed: false },
-      { name: "Statistics", difficulty: "Intermediate", duration: "20 min", xp: 80, completed: false },
-    ]
+    const totalAchievements = achievementCategories.reduce((acc, cat) => acc + cat.achievements.length, 0)
+    const unlockedAchievements = achievementCategories.reduce(
+      (acc, cat) => acc + cat.achievements.filter((a) => a.unlocked).length,
+      0,
+    )
 
-    if (selectedTopic) {
-      return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-6">
-          <div className="max-w-4xl mx-auto">
-            <button
-              onClick={() => setSelectedTopic(null)}
-              className="mb-6 flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              Back to Topics
-            </button>
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50">
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-16">
+              <Button
+                variant="ghost"
+                onClick={handleBackToDashboard}
+                className="flex items-center space-x-2 hover:bg-slate-100"
+              >
+                <span>←</span>
+                <span>Back to Dashboard</span>
+              </Button>
 
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-              {/* Video Section */}
-              <div className="bg-gray-900 aspect-video flex items-center justify-center">
-                <div className="text-center text-white">
-                  <Play className="w-16 h-16 mx-auto mb-4 opacity-80" />
-                  <p className="text-lg">Interactive Video: {selectedTopic}</p>
-                  <p className="text-sm opacity-70">Click to start learning</p>
-                </div>
-              </div>
+              <h1 className="text-xl font-bold text-slate-800">🏅 Achievements</h1>
 
-              {/* Content Section */}
-              <div className="p-8">
-                <div className="flex justify-between items-start mb-6">
-                  <div>
-                    <h1 className="text-3xl font-bold text-gray-800 mb-2">{selectedTopic}</h1>
-                    <div className="flex items-center gap-4 text-sm text-gray-600">
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-4 h-4" />
-                        25 min
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Star className="w-4 h-4" />
-                        75 XP
-                      </span>
-                      <span className="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs">Intermediate</span>
-                    </div>
-                  </div>
-                  <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors">
-                    Mark Complete
-                  </button>
-                </div>
-
-                {/* Learning Content */}
-                <div className="prose max-w-none mb-8">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-4">What you'll learn:</h3>
-                  <ul className="space-y-2 text-gray-700">
-                    <li>• Understanding the fundamental concepts</li>
-                    <li>• Practical applications and examples</li>
-                    <li>• Problem-solving techniques</li>
-                    <li>• Real-world connections</li>
-                  </ul>
-                </div>
-
-                {/* Interactive Exploration */}
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl mb-8">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-4">Interactive Exploration</h3>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Adjust Parameter A: <span className="font-bold">5</span>
-                      </label>
-                      <input type="range" min="1" max="10" defaultValue="5" className="w-full" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Adjust Parameter B: <span className="font-bold">3</span>
-                      </label>
-                      <input type="range" min="1" max="10" defaultValue="3" className="w-full" />
-                    </div>
-                    <div className="bg-white p-4 rounded-lg border-2 border-dashed border-gray-300 text-center">
-                      <p className="text-gray-600">Interactive visualization will appear here</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Quiz Section */}
-                <div className="bg-green-50 p-6 rounded-xl">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-4">Quick Quiz</h3>
-                  <div className="space-y-4">
-                    <div>
-                      <p className="font-medium text-gray-800 mb-3">What is the result of 2x + 3 when x = 5?</p>
-                      <div className="space-y-2">
-                        {["10", "13", "15", "8"].map((option, index) => (
-                          <label key={index} className="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="quiz1" value={option} className="text-green-500" />
-                            <span className="text-gray-700">{option}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                    <button className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors">
-                      Submit Answer (+25 XP)
-                    </button>
-                  </div>
-                </div>
+              <div className="text-sm text-slate-600">
+                {unlockedAchievements}/{totalAchievements} unlocked
               </div>
             </div>
           </div>
-        </div>
-      )
-    }
+        </nav>
 
-    if (selectedSubject) {
-      return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-6">
-          <div className="max-w-6xl mx-auto">
-            <button
-              onClick={() => setSelectedSubject(null)}
-              className="mb-6 flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              Back to Subjects
-            </button>
+        <main className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-6xl mx-auto space-y-8">
+            {/* Progress Header */}
+            <Card className="overflow-hidden shadow-xl bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white">
+              <CardContent className="p-8 text-center">
+                <div className="text-6xl mb-4">🏆</div>
+                <h2 className="text-3xl font-bold mb-2">Trophy Cabinet</h2>
+                <p className="text-orange-100 mb-4">
+                  You've unlocked {unlockedAchievements} out of {totalAchievements} achievements!
+                </p>
+                <div className="w-full bg-white/20 rounded-full h-3 mb-2">
+                  <div
+                    className="bg-white h-3 rounded-full transition-all duration-1000"
+                    style={{ width: `${(unlockedAchievements / totalAchievements) * 100}%` }}
+                  />
+                </div>
+                <p className="text-sm text-orange-200">
+                  {Math.round((unlockedAchievements / totalAchievements) * 100)}% Complete
+                </p>
+              </CardContent>
+            </Card>
 
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-8 rounded-2xl mb-8">
-              <h1 className="text-4xl font-bold mb-2">{selectedSubject} Topics</h1>
-              <p className="text-blue-100">Explore comprehensive lessons and interactive content</p>
+            {/* Achievement Categories */}
+            {achievementCategories.map((category, categoryIndex) => (
+              <div key={categoryIndex} className="space-y-4">
+                <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-2">{category.name}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {category.achievements.map((achievement) => (
+                    <Card
+                      key={achievement.id}
+                      className={`group relative overflow-hidden border-2 transition-all duration-300 cursor-pointer transform hover:scale-105 ${
+                        achievement.unlocked
+                          ? "border-yellow-400 shadow-lg hover:shadow-xl bg-gradient-to-br from-yellow-50 to-orange-50"
+                          : "border-slate-200 shadow-sm hover:shadow-md bg-slate-50 opacity-60"
+                      }`}
+                    >
+                      {achievement.unlocked && (
+                        <div className="absolute top-2 right-2">
+                          <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs">✓</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {!achievement.unlocked && (
+                        <div className="absolute top-2 right-2">
+                          <div className="w-6 h-6 bg-slate-400 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs">🔒</span>
+                          </div>
+                        </div>
+                      )}
+
+                      <CardContent className="p-6 text-center">
+                        <div
+                          className={`text-4xl mb-3 transition-transform duration-300 ${
+                            achievement.unlocked ? "group-hover:scale-110" : "grayscale"
+                          }`}
+                        >
+                          🏅
+                        </div>
+
+                        <h4
+                          className={`text-lg font-bold mb-2 ${
+                            achievement.unlocked ? "text-slate-800" : "text-slate-500"
+                          }`}
+                        >
+                          {achievement.title}
+                        </h4>
+
+                        <p className={`text-sm mb-3 ${achievement.unlocked ? "text-slate-600" : "text-slate-400"}`}>
+                          {achievement.description}
+                        </p>
+
+                        <div
+                          className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${
+                            achievement.unlocked ? "bg-yellow-100 text-yellow-800" : "bg-slate-100 text-slate-500"
+                          }`}
+                        >
+                          ⭐ {achievement.xp} XP
+                        </div>
+
+                        {achievement.unlocked && achievement.date && (
+                          <p className="text-xs text-slate-500 mt-2">
+                            Unlocked: {new Date(achievement.date).toLocaleDateString()}
+                          </p>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  const renderProfilePage = () => {
+    const progressColorVariants: { [key: string]: { bg: string; text: string; fill: string } } = {
+      blue: { bg: 'bg-blue-100', text: 'text-blue-700', fill: 'bg-blue-500' },
+      purple: { bg: 'bg-purple-100', text: 'text-purple-700', fill: 'bg-purple-500' },
+      green: { bg: 'bg-green-100', text: 'text-green-700', fill: 'bg-green-500' },
+      pink: { bg: 'bg-pink-100', text: 'text-pink-700', fill: 'bg-pink-500' },
+      orange: { bg: 'bg-orange-100', text: 'text-orange-700', fill: 'bg-orange-500' },
+      teal: { bg: 'bg-teal-100', text: 'text-teal-700', fill: 'bg-teal-500' },
+    };
+
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-16">
+              <Button
+                variant="ghost"
+                onClick={handleBackToDashboard}
+                className="flex items-center space-x-2 hover:bg-slate-100"
+              >
+                <span>←</span>
+                <span>Back to Dashboard</span>
+              </Button>
+
+              <h1 className="text-xl font-bold text-slate-800">My Profile</h1>
+
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white">Edit Profile</Button>
             </div>
+          </div>
+        </nav>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {topics.map((topic, index) => (
-                <div
-                  key={index}
-                  onClick={() => setSelectedTopic(topic.name)}
-                  className={`bg-white rounded-xl shadow-lg p-6 cursor-pointer hover:scale-105 transition-all border-2 ${
-                    topic.completed ? "border-green-300 bg-green-50" : "border-blue-200 hover:border-blue-300"
-                  }`}
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-xl font-bold text-gray-800">{topic.name}</h3>
-                    {topic.completed && <CheckCircle className="w-5 h-5 text-green-500" />}
+        <main className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-6xl mx-auto space-y-8">
+            {/* Header Section */}
+            <Card className="overflow-hidden shadow-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white">
+              <CardContent className="p-8">
+                <div className="flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-8">
+                  <div className="relative">
+                    <Avatar className="h-32 w-32 ring-4 ring-white/30 shadow-2xl">
+                      <AvatarImage src="/student-avatar.png" alt="Student" />
+                      <AvatarFallback className="bg-white/20 text-white font-bold text-4xl">ST</AvatarFallback>
+                    </Avatar>
+                    <Button className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full bg-white text-blue-600 hover:bg-blue-50 p-0">
+                      ✏️
+                    </Button>
+                  </div>
+
+                  <div className="text-center md:text-left flex-1">
+                    <h1 className="text-3xl font-bold mb-2">Sarah Thompson</h1>
+                    <p className="text-blue-100 mb-1">@sarah_learns</p>
+                    <p className="text-blue-200 mb-4">Class 9 – CBSE, Andhra Pradesh</p>
+                    <div className="flex flex-wrap justify-center md:justify-start gap-4">
+                      <div className="bg-white/20 rounded-full px-4 py-2">
+                        <span className="font-semibold">Level 12</span>
+                      </div>
+                      <div className="bg-white/20 rounded-full px-4 py-2">
+                        <span className="font-semibold">🔥 {streak} Day Streak</span>
+                      </div>
+                      <div className="bg-white/20 rounded-full px-4 py-2">
+                        <span className="font-semibold">⭐ {points.toLocaleString()} XP</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Streak & Activity + XP Progress */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <Card className="shadow-lg">
+                <CardContent className="p-6">
+                  <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
+                    <span className="mr-2">🔥</span>
+                    Streak & Activity
+                  </h2>
+
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div className="text-center p-4 bg-orange-100 rounded-xl">
+                      <div className="text-3xl mb-2">🔥</div>
+                      <div className="text-2xl font-bold text-orange-700">{streak}</div>
+                      <div className="text-sm text-orange-600">Current Streak</div>
+                    </div>
+                    <div className="text-center p-4 bg-yellow-100 rounded-xl">
+                      <div className="text-3xl mb-2">🏆</div>
+                      <div className="text-2xl font-bold text-yellow-700">21</div>
+                      <div className="text-sm text-yellow-600">Best Streak</div>
+                    </div>
+                  </div>
+
+                  {/* Mini Calendar */}
+                  <div className="bg-slate-50 rounded-lg p-4">
+                    <h3 className="font-semibold text-slate-800 mb-3">This Week</h3>
+                    <div className="flex justify-between">
+                      {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day, index) => (
+                        <div key={day} className="text-center">
+                          <div className="text-xs text-slate-600 mb-1">{day}</div>
+                          <div
+                            className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                              index < 5 ? "bg-orange-100 text-orange-600" : "bg-gray-100 text-gray-400"
+                            }`}
+                          >
+                            {index < 5 ? "🔥" : "○"}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Recent Badges */}
+                  <div className="mt-6">
+                    <h3 className="font-semibold text-slate-800 mb-3">Recent Badges</h3>
+                    <div className="flex space-x-2">
+                      <div className="bg-yellow-100 p-2 rounded-lg text-center">
+                        <div className="text-2xl">🏅</div>
+                        <div className="text-xs text-yellow-700">Quiz Master</div>
+                      </div>
+                      <div className="bg-blue-100 p-2 rounded-lg text-center">
+                        <div className="text-2xl">🎯</div>
+                        <div className="text-xs text-blue-700">Focus Champ</div>
+                      </div>
+                      <div className="bg-green-100 p-2 rounded-lg text-center">
+                        <div className="text-2xl">📚</div>
+                        <div className="text-xs text-green-700">Bookworm</div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="shadow-lg">
+                <CardContent className="p-6">
+                  <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
+                    <span className="mr-2">⭐</span>
+                    XP & Level Progress
+                  </h2>
+
+                  <div className="text-center mb-6">
+                    <div className="text-4xl font-bold text-purple-600 mb-2">Level 12</div>
+                    <div className="text-slate-600 mb-4">{points.toLocaleString()} / 1,500 XP</div>
+                    <div className="w-full bg-slate-200 rounded-full h-4 mb-2">
+                      <div
+                        className="bg-gradient-to-r from-purple-500 to-pink-500 h-4 rounded-full transition-all duration-300"
+                        style={{ width: `${(points / 1500) * 100}%` }}
+                      />
+                    </div>
+                    <div className="text-sm text-slate-600">300 XP to Level 13</div>
                   </div>
 
                   <div className="space-y-3">
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-gray-600">Difficulty:</span>
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          topic.difficulty === "Beginner"
-                            ? "bg-green-100 text-green-700"
-                            : topic.difficulty === "Intermediate"
-                              ? "bg-yellow-100 text-yellow-700"
-                              : "bg-red-100 text-red-700"
-                        }`}
-                      >
-                        {topic.difficulty}
-                      </span>
+                    <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                      <span className="text-blue-700">XP This Week</span>
+                      <span className="font-bold text-blue-800">+450 XP</span>
                     </div>
-
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-gray-600">Duration:</span>
-                      <span className="font-medium">{topic.duration}</span>
+                    <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                      <span className="text-green-700">Lessons Completed</span>
+                      <span className="font-bold text-green-800">24</span>
                     </div>
-
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-gray-600">XP Reward:</span>
-                      <span className="font-bold text-blue-600">{topic.xp} XP</span>
+                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                      <span className="text-orange-700">Average Quiz Score</span>
+                      <span className="font-bold text-orange-800">87%</span>
                     </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
 
-                    <button
-                      className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
-                        topic.completed ? "bg-green-500 text-white" : "bg-blue-500 text-white hover:bg-blue-600"
+            {/* Academic Progress */}
+            <Card className="shadow-lg">
+              <CardContent className="p-6">
+                <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
+                  <span className="mr-2">📚</span>
+                  Academic Progress
+                </h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {[
+                    { subject: "Mathematics", icon: "➗", progress: 75, topic: "Quadratic Equations", score: 92, color: "blue" },
+                    { subject: "Physics", icon: "⚡", progress: 60, topic: "Newton's Laws", score: 85, color: "purple" },
+                    { subject: "Chemistry", icon: "🧪", progress: 45, topic: "Atomic Structure", score: 78, color: "green" },
+                    { subject: "Biology", icon: "🧬", progress: 80, topic: "Cell Division", score: 94, color: "pink" },
+                    { subject: "Computer Science", icon: "💻", progress: 90, topic: "Data Structures", score: 96, color: "orange" },
+                    { subject: "General STEM", icon: "🌍", progress: 35, topic: "Scientific Method", score: 82, color: "teal" },
+                  ].map((subject, index) => {
+                    const colors = progressColorVariants[subject.color] || progressColorVariants.blue;
+                    return (
+                      <Card key={index} className="border-0 shadow-md hover:shadow-lg transition-shadow">
+                        <CardContent className="p-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="text-2xl">{subject.icon}</div>
+                            <div className={`text-sm font-semibold px-2 py-1 rounded-full ${colors.bg} ${colors.text}`}>
+                              {subject.progress}%
+                            </div>
+                          </div>
+                          <h3 className="font-bold text-slate-800 mb-2">{subject.subject}</h3>
+                          <div className="space-y-2">
+                            <div className={`w-full ${colors.bg} rounded-full h-2`}>
+                              <div
+                                className={`${colors.fill} h-2 rounded-full`}
+                                style={{ width: `${subject.progress}%` }}
+                              />
+                            </div>
+                            <div className="text-sm text-slate-600">
+                              <div>Current: {subject.topic}</div>
+                              <div>Avg Score: {subject.score}%</div>
+                              <div className="text-xs text-slate-500">Last activity: 2 hours ago</div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Achievements & Badges */}
+            <Card className="shadow-lg">
+              <CardContent className="p-6">
+                <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
+                  <span className="mr-2">🏆</span>
+                  Achievements & Badges
+                </h2>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                  {[
+                    { name: "Quiz Master", icon: "🏅", unlocked: true, hint: "" },
+                    { name: "Streak King", icon: "🔥", unlocked: true, hint: "" },
+                    { name: "Focus Champ", icon: "🎯", unlocked: true, hint: "" },
+                    { name: "Math Wizard", icon: "🧙‍♂️", unlocked: false, hint: "Complete 50 math problems" },
+                    { name: "Science Star", icon: "⭐", unlocked: false, hint: "Score 95% on 5 science quizzes" },
+                    { name: "Code Crusher", icon: "💻", unlocked: false, hint: "Finish 10 coding challenges" },
+                  ].map((badge, index) => (
+                    <div
+                      key={index}
+                      className={`text-center p-4 rounded-xl border-2 transition-all ${
+                        badge.unlocked
+                          ? "bg-gradient-to-br from-yellow-100 to-orange-100 border-yellow-300 shadow-lg"
+                          : "bg-gray-100 border-gray-300 opacity-60"
                       }`}
                     >
-                      {topic.completed ? "Review" : "Start Learning"}
-                    </button>
+                      <div className="text-3xl mb-2">{badge.icon}</div>
+                      <div className="font-semibold text-sm text-slate-800">{badge.name}</div>
+                      {!badge.unlocked && <div className="text-xs text-slate-500 mt-1">{badge.hint}</div>}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Community & Social + Learning Analytics */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <Card className="shadow-lg">
+                <CardContent className="p-6">
+                  <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
+                    <span className="mr-2">👥</span>
+                    Community & Social
+                  </h2>
+
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                      <span className="text-blue-700">Communities Joined</span>
+                      <span className="font-bold text-blue-800">5</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                      <span className="text-green-700">Posts This Week</span>
+                      <span className="font-bold text-green-800">12</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-purple-50 rounded-lg">
+                      <span className="text-purple-700">Friends Connected</span>
+                      <span className="font-bold text-purple-800">156</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-6">
+                    <h3 className="font-semibold text-slate-800 mb-3">Recent Activity</h3>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center space-x-2 text-slate-600">
+                        <span>💬</span>
+                        <span>Replied to "Math Help" discussion</span>
+                      </div>
+                      <div className="flex items-center space-x-2 text-slate-600">
+                        <span>👍</span>
+                        <span>Liked Sarah's physics solution</span>
+                      </div>
+                      <div className="flex items-center space-x-2 text-slate-600">
+                        <span>🎉</span>
+                        <span>Joined "Chemistry Lab" community</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="shadow-lg">
+                <CardContent className="p-6">
+                  <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
+                    <span className="mr-2">📊</span>
+                    Learning Analytics
+                  </h2>
+
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="font-semibold text-slate-800 mb-3">Weekly Study Time</h3>
+                      <div className="flex items-end space-x-2 h-20">
+                        {[40, 65, 30, 80, 55, 70, 45].map((height, index) => (
+                          <div key={index} className="flex-1 bg-blue-200 rounded-t" style={{ height: `${height}%` }}>
+                            <div
+                              className="bg-blue-500 rounded-t h-full"
+                              style={{ height: `${Math.random() * 100}%` }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      <div className="flex justify-between text-xs text-slate-500 mt-1">
+                        {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+                          <span key={day}>{day}</span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="text-center p-3 bg-orange-50 rounded-lg">
+                        <div className="text-2xl font-bold text-orange-700">12h 30m</div>
+                        <div className="text-sm text-orange-600">This Week</div>
+                      </div>
+                      <div className="text-center p-3 bg-green-50 rounded-lg">
+                        <div className="text-2xl font-bold text-green-700">#8</div>
+                        <div className="text-sm text-green-600">Leaderboard</div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Personal Details */}
+            <Card className="shadow-lg">
+              <CardContent className="p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-bold text-slate-800 flex items-center">
+                    <span className="mr-2">👤</span>
+                    Personal Details
+                  </h2>
+                  <Button variant="outline" className="text-blue-600 border-blue-600 hover:bg-blue-50 bg-transparent">
+                    Edit Details
+                  </Button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-medium text-slate-600">Date of Birth</label>
+                      <div className="text-slate-800">March 15, 2008</div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-slate-600">Email</label>
+                      <div className="text-slate-800">sarah.thompson@email.com</div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-slate-600">Phone</label>
+                      <div className="text-slate-800">+91 98765 43210</div>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-medium text-slate-600">School</label>
+                      <div className="text-slate-800">Delhi Public School, Hyderabad</div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-slate-600">Parent/Guardian</label>
+                      <div className="text-slate-800">Mrs. Priya Thompson</div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-slate-600">Emergency Contact</label>
+                      <div className="text-slate-800">+91 98765 43211</div>
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
+              </CardContent>
+            </Card>
+
+            {/* Settings */}
+            <Card className="shadow-lg">
+              <CardContent className="p-6">
+                <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
+                  <span className="mr-2">⚙️</span>
+                  Settings
+                </h2>
+
+                <div className="space-y-6">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <div className="font-medium text-slate-800">Language Preference</div>
+                      <div className="text-sm text-slate-600">Choose your preferred language</div>
+                    </div>
+                    <select className="px-3 py-2 border border-slate-300 rounded-lg bg-white">
+                      <option>English</option>
+                      <option>Hindi</option>
+                      <option>Telugu</option>
+                    </select>
+                  </div>
+
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <div className="font-medium text-slate-800">Notifications</div>
+                      <div className="text-sm text-slate-600">Receive learning reminders and updates</div>
+                    </div>
+                    <Button className="bg-green-500 hover:bg-green-600 text-white">ON</Button>
+                  </div>
+
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <div className="font-medium text-slate-800">Profile Visibility</div>
+                      <div className="text-sm text-slate-600">Control what others can see</div>
+                    </div>
+                    <select className="px-3 py-2 border border-slate-300 rounded-lg bg-white">
+                      <option>Public</option>
+                      <option>Friends Only</option>
+                      <option>Private</option>
+                    </select>
+                  </div>
+
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <div className="font-medium text-slate-800">Study Reminders</div>
+                      <div className="text-sm text-slate-600">Daily learning goal notifications</div>
+                    </div>
+                    <Button className="bg-blue-500 hover:bg-blue-600 text-white">ON</Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
-        </div>
+        </main>
+      </div>
+    )
+  }
+
+  const renderStreakDashboardPage = () => {
+    const currentDate = new Date()
+    const currentMonth = currentDate.getMonth()
+    const currentYear = currentDate.getFullYear()
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
+    const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay()
+
+    // Generate calendar days with streak status
+    const calendarDays = []
+    const streakData: { [key: number]: string } = {
+      1: "completed",
+      2: "completed",
+      3: "partial",
+      4: "completed",
+      5: "completed",
+      6: "missed",
+      7: "completed",
+      8: "completed",
+      9: "completed",
+      10: "partial",
+      11: "completed",
+      12: "completed",
+      13: "completed",
+      14: "missed",
+      15: "completed",
+    }
+
+    // Add empty cells for days before month starts
+    for (let i = 0; i < firstDayOfMonth; i++) {
+      calendarDays.push(<div key={`empty-${i}`} className="h-10"></div>)
+    }
+
+    // Add days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      const status = streakData[day] || "future"
+      const isToday = day === currentDate.getDate()
+
+      let dayClass =
+        "h-10 w-10 rounded-lg flex items-center justify-center text-sm font-medium transition-all duration-200 "
+      let icon = ""
+
+      if (status === "completed") {
+        dayClass += "bg-orange-100 text-orange-700 border-2 border-orange-300"
+        icon = "🔥"
+      } else if (status === "partial") {
+        dayClass += "bg-blue-100 text-blue-700 border-2 border-blue-300"
+        icon = "🌙"
+      } else if (status === "missed") {
+        dayClass += "bg-red-100 text-red-700 border-2 border-red-300"
+        icon = "❌"
+      } else {
+        dayClass += "bg-gray-100 text-gray-500"
+      }
+
+      if (isToday) {
+        dayClass += " ring-2 ring-purple-400 ring-offset-2"
+      }
+
+      calendarDays.push(
+        <div key={day} className={dayClass}>
+          <div className="flex flex-col items-center">
+            <span className="text-xs">{day}</span>
+            {icon && <span className="text-xs">{icon}</span>}
+          </div>
+        </div>,
       )
     }
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-6">
-        <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 p-6">
+        <div className="max-w-6xl mx-auto">
           <button
             onClick={() => setCurrentView("dashboard")}
-            className="mb-6 flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors"
+            className="mb-6 flex items-center gap-2 text-orange-600 hover:text-orange-700 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
             Back to Dashboard
           </button>
 
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-8 rounded-2xl mb-8">
-            <h1 className="text-4xl font-bold mb-4">Learning Hub</h1>
-            <p className="text-blue-100 text-lg">
-              Comprehensive lessons, interactive content, and hands-on learning experiences.
-            </p>
+          {/* Header */}
+          <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white p-8 rounded-2xl mb-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-4xl font-bold mb-2">Streak Dashboard</h1>
+                <p className="text-orange-100">Keep the momentum going! Every day counts.</p>
+              </div>
+              <div className="text-center">
+                <div className="text-6xl font-bold mb-2">{streak}</div>
+                <div className="text-orange-200">Current Streak</div>
+              </div>
+            </div>
+            <div className="mt-6 flex items-center gap-8">
+              <div className="text-center">
+                <div className="text-2xl font-bold">21</div>
+                <div className="text-sm text-orange-200">Best Streak</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold">67%</div>
+                <div className="text-sm text-orange-200">This Month</div>
+              </div>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {subjects.map((subject, index) => (
-              <div
-                key={index}
-                onClick={() => setSelectedSubject(subject.name)}
-                className={`bg-gradient-to-br from-${subject.color}-500 to-${subject.color}-600 text-white p-6 rounded-xl cursor-pointer hover:scale-105 transition-all shadow-lg hover:shadow-xl`}
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-4xl">{subject.icon}</span>
-                  <div className="text-right">
-                    <div className="text-sm opacity-90">Progress</div>
-                    <div className="text-2xl font-bold">{Math.round((subject.completed / subject.topics) * 100)}%</div>
+          {/* Calendar and Weekly Progress */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Monthly Calendar */}
+            <div className="bg-white rounded-2xl p-6 shadow-xl">
+              <h2 className="text-2xl font-bold text-slate-800 mb-4 text-center">
+                {new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+              </h2>
+
+              {/* Calendar Header */}
+              <div className="grid grid-cols-7 gap-2 mb-4">
+                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                  <div key={day} className="text-center text-sm font-medium text-slate-600 py-2">
+                    {day}
                   </div>
+                ))}
+              </div>
+
+              {/* Calendar Grid */}
+              <div className="grid grid-cols-7 gap-2 mb-6">{calendarDays}</div>
+
+              {/* Legend */}
+              <div className="space-y-2 text-sm">
+                <div className="flex items-center space-x-2">
+                  <span>🔥</span>
+                  <span className="text-slate-600">Full streak day</span>
                 </div>
-
-                <h3 className="text-xl font-bold mb-2">{subject.name}</h3>
-
-                <div className="mb-4">
-                  <div className="flex justify-between text-sm opacity-90 mb-1">
-                    <span>Topics Completed</span>
-                    <span>
-                      {subject.completed}/{subject.topics}
-                    </span>
-                  </div>
-                  <div className="w-full bg-white/20 rounded-full h-2">
-                    <div
-                      className="bg-white rounded-full h-2 transition-all duration-500"
-                      style={{ width: `${(subject.completed / subject.topics) * 100}%` }}
-                    ></div>
-                  </div>
+                <div className="flex items-center space-x-2">
+                  <span>🌙</span>
+                  <span className="text-slate-600">Partial streak</span>
                 </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-sm opacity-90">Start learning</span>
-                  <ArrowRight className="w-5 h-5" />
+                <div className="flex items-center space-x-2">
+                  <span>❌</span>
+                  <span className="text-slate-600">Missed day</span>
                 </div>
               </div>
-            ))}
+            </div>
+
+            {/* Weekly Progress */}
+            <div className="space-y-6">
+              <div className="bg-white rounded-2xl p-6 shadow-xl">
+                <h2 className="text-2xl font-bold text-slate-800 mb-4">This Week</h2>
+
+                <div className="flex justify-between items-center mb-4">
+                  {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day, index) => {
+                    const isCompleted = index < 5
+                    return (
+                      <div key={day} className="flex flex-col items-center space-y-2">
+                        <div className="text-xs text-slate-600">{day}</div>
+                        <div
+                          className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                            isCompleted ? "bg-orange-100 text-orange-600" : "bg-gray-100 text-gray-400"
+                          }`}
+                        >
+                          {isCompleted ? "🔥" : "○"}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+
+                <div className="bg-gradient-to-r from-orange-400 to-red-500 rounded-full h-3 mb-4">
+                  <div
+                    className="bg-gradient-to-r from-orange-500 to-red-600 h-3 rounded-full"
+                    style={{ width: "71%" }}
+                  ></div>
+                </div>
+
+                <p className="text-center text-slate-600 font-medium">2 more days to unlock Weekly Bonus Badge! 🏅</p>
+              </div>
+
+              {/* Rules Section */}
+              <div className="bg-white rounded-2xl p-6 shadow-xl">
+                <h2 className="text-2xl font-bold text-slate-800 mb-4">How Streaks Work</h2>
+
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-3">
+                    <span className="text-2xl">🎥</span>
+                    <div>
+                      <div className="font-medium text-slate-800">Watch at least 1 learning video</div>
+                      <div className="text-sm text-slate-600">Complete any lesson video</div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-3">
+                    <span className="text-2xl">🎮</span>
+                    <div>
+                      <div className="font-medium text-slate-800">Play STEM games for 30+ minutes</div>
+                      <div className="text-sm text-slate-600">Any combination of games counts</div>
+                    </div>
+                  </div>
+
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-4">
+                    <h3 className="font-bold text-yellow-800 mb-2">Rewards:</h3>
+                    <ul className="space-y-1 text-sm text-yellow-700">
+                      <li>• +2 XP for 5-day streak</li>
+                      <li>• +10 XP and Badge for 7-day streak</li>
+                      <li>• Golden Badge for 30-day streak</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Streak Badges */}
+          <div className="bg-white rounded-2xl p-6 shadow-xl mt-8">
+            <h2 className="text-2xl font-bold text-slate-800 mb-6 text-center">Streak Achievements</h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="text-center p-4 bg-gradient-to-br from-orange-100 to-red-100 rounded-xl border-2 border-orange-200">
+                <div className="text-4xl mb-2">🔥</div>
+                <div className="font-bold text-slate-800">5-Day Streak</div>
+                <div className="text-sm text-slate-600">Unlocked!</div>
+                <div className="text-xs text-orange-600 mt-1">+2 XP Bonus</div>
+              </div>
+
+              <div className="text-center p-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl border-2 border-gray-300 opacity-60">
+                <div className="text-4xl mb-2">🏅</div>
+                <div className="font-bold text-slate-800">7-Day Streak</div>
+                <div className="text-sm text-slate-600">2 days to go</div>
+                <div className="text-xs text-gray-600 mt-1">+10 XP + Badge</div>
+              </div>
+
+              <div className="text-center p-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl border-2 border-gray-300 opacity-60">
+                <div className="text-4xl mb-2">👑</div>
+                <div className="font-bold text-slate-800">30-Day Streak</div>
+                <div className="text-sm text-slate-600">25 days to go</div>
+                <div className="text-xs text-gray-600 mt-1">Golden Badge</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1554,7 +1736,7 @@ const LearningSection = ({ handleBackToDashboard, selectedSubject, setSelectedSu
             </div>
             <div className="text-center">
               <div className="text-6xl font-bold mb-2">8</div>
-              <div classNameclassName="text-orange-200">Current Streak</div>
+              <div className="text-orange-200">Current Streak</div>
             </div>
           </div>
           <div className="mt-6 flex items-center gap-8">
@@ -1746,7 +1928,7 @@ const LearningSection = ({ handleBackToDashboard, selectedSubject, setSelectedSu
           </div>
         </nav>
 
-        <main className="pt-24 pb-12 px-4 sm:px:6 lg:px-8">
+        <main className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-6xl mx-auto space-y-8">
             {/* Header Section */}
             <div className="text-center space-y-6">
@@ -2006,7 +2188,7 @@ const LearningSection = ({ handleBackToDashboard, selectedSubject, setSelectedSu
               <Button
                 key={mode}
                 variant={challengeMode === mode ? "default" : "ghost"}
-                onClick={() => setChallengeMode(mode as any)}
+                onClick={() => setChallengeMode(mode)}
                 className={`mx-1 ${
                   challengeMode === mode
                     ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white"
@@ -2212,84 +2394,93 @@ const LearningSection = ({ handleBackToDashboard, selectedSubject, setSelectedSu
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <FloatingChatbot />
-
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="relative h-10 w-10 rounded-full mr-4 hover:ring-2 hover:ring-blue-500/30 transition-all"
-                  >
-                    <Avatar className="h-10 w-10 ring-2 ring-blue-500/20 hover:ring-blue-500/40 transition-all">
-                      <AvatarImage src="/student-avatar.png" alt="Student" />
-                      <AvatarFallback className="bg-slate-700 text-white font-semibold">ST</AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-64 p-2" align="start">
-                  <div className="px-3 py-2 border-b border-slate-100 mb-2">
-                    <p className="font-semibold text-slate-800">Sarah Thompson</p>
-                    <p className="text-sm text-slate-500">Class 9 • 1,200 XP</p>
+              <div className="relative">
+                <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="relative h-10 w-10 rounded-full mr-4 hover:ring-2 hover:ring-blue-500/30 transition-all cursor-pointer"
+                >
+                  <Avatar className="h-10 w-10 ring-2 ring-blue-500/20 hover:ring-blue-500/40 transition-all pointer-events-none">
+                    <AvatarImage src="/student-avatar.png" alt="Student" />
+                    <AvatarFallback className="bg-slate-700 text-white font-semibold">ST</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent id="profile-dropdown" className="w-64 p-2" align="end" role="menu" aria-label="Profile options">
+                <div className="px-3 py-2 border-b border-slate-100 mb-2" role="none">
+                  <p className="font-semibold text-slate-800">Sarah Thompson</p>
+                  <p className="text-sm text-slate-500">Class 9 • 1,200 XP</p>
+                </div>
+
+                <DropdownMenuItem
+                  className="cursor-pointer flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors"
+                  onClick={handleProfileClick}
+                  role="menuitem"
+                  tabIndex={-1}
+                >
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <span className="text-blue-600">👤</span>
                   </div>
-
-                  <DropdownMenuItem
-                    className="cursor-pointer flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors"
-                    onClick={handleProfileClick}
-                  >
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600">👤</span>
-                    </div>
-                    <div>
-                      <p className="font-medium text-slate-800">Profile</p>
-                      <p className="text-xs text-slate-500">View your details</p>
-                    </div>
-                  </DropdownMenuItem>
-
-                  <DropdownMenuItem
-                    className="cursor-pointer flex items-center gap-3 p-3 rounded-lg hover:bg-yellow-50 transition-colors"
-                    onClick={handleAchievementsClick}
-                  >
-                    <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
-                      <span className="text-yellow-600">🏅</span>
-                    </div>
-                    <div>
-                      <p className="font-medium text-slate-800">Achievements</p>
-                      <p className="text-xs text-slate-500">Trophy cabinet</p>
-                    </div>
-                  </DropdownMenuItem>
-
-                  <DropdownMenuItem
-                    className="cursor-pointer flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors"
-                    onClick={handleSettingsClick}
-                  >
-                    <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center">
-                      <span className="text-slate-600">⚙️</span>
-                    </div>
-                    <div>
-                      <p className="font-medium text-slate-800">Settings</p>
-                      <p className="text-xs text-slate-500">Preferences</p>
-                    </div>
-                  </DropdownMenuItem>
-
-                  <div className="border-t border-slate-100 mt-2 pt-2">
-                    <DropdownMenuItem
-                      className="cursor-pointer flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 transition-colors"
-                      onClick={handleLogoutClick}
-                    >
-                      <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
-                        <span className="text-red-600">🚪</span>
-                      </div>
-                      <div>
-                        <p className="font-medium text-slate-800">Logout</p>
-                        <p className="text-xs text-slate-500">Sign out</p>
-                      </div>
-                    </DropdownMenuItem>
+                  <div>
+                    <p className="font-medium text-slate-800">Profile</p>
+                    <p className="text-xs text-slate-500">View your details</p>
                   </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem
+                  className="cursor-pointer flex items-center gap-3 p-3 rounded-lg hover:bg-yellow-50 transition-colors"
+                  onClick={handleAchievementsClick}
+                  role="menuitem"
+                  tabIndex={-1}
+                >
+                  <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+                    <span className="text-yellow-600">🏅</span>
+                  </div>
+                  <div>
+                    <p className="font-medium text-slate-800">Achievements</p>
+                    <p className="text-xs text-slate-500">Trophy cabinet</p>
+                  </div>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem
+                  className="cursor-pointer flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors"
+                  onClick={handleSettingsClick}
+                  role="menuitem"
+                  tabIndex={-1}
+                >
+                  <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center">
+                    <span className="text-slate-600">⚙️</span>
+                  </div>
+                  <div>
+                    <p className="font-medium text-slate-800">Settings</p>
+                    <p className="text-xs text-slate-500">Preferences</p>
+                  </div>
+                </DropdownMenuItem>
+
+                <div className="border-t border-slate-100 mt-2 pt-2" role="none">
+                  <DropdownMenuItem
+                    className="cursor-pointer flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 transition-colors"
+                    onClick={handleLogoutClick}
+                    role="menuitem"
+                    tabIndex={-1}
+                  >
+                    <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                      <span className="text-red-600">🚪</span>
+                    </div>
+                    <div>
+                      <p className="font-medium text-slate-800">Logout</p>
+                      <p className="text-xs text-slate-500">Sign out</p>
+                    </div>
+                  </DropdownMenuItem>
+                </div>
+              </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
 
             <div className="flex items-center space-x-4">
@@ -2324,58 +2515,61 @@ const LearningSection = ({ handleBackToDashboard, selectedSubject, setSelectedSu
 
       <main className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4 text-balance">
-              Welcome to Your Learning Adventure! 🚀
-            </h1>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto text-pretty">
-              Choose your path and start exploring. Every click brings you closer to mastering new skills!
-            </p>
-          </div>
-
           {currentView === "dashboard" && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">
-              {dashboardCards.map((card) => (
-                <Card
-                  key={card.id}
-                  className="group relative overflow-hidden border-0 shadow-xl hover:shadow-2xl transition-all duration-500 cursor-pointer transform hover:scale-105 hover:-translate-y-2"
-                  onClick={() => handleCardClick(card.id)}
-                >
-                  <div className="absolute inset-0 bg-slate-800" />
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${card.gradient} group-hover:${card.hoverGradient} transition-all duration-500`}
-                  />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-500" />
+            <div>
+              <div className="text-center mb-12">
+                <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4 text-balance">
+                  Welcome to Your Learning Adventure! 🚀
+                </h1>
+                <p className="text-xl text-slate-600 max-w-2xl mx-auto text-pretty">
+                  Choose your path and start exploring. Every click brings you closer to mastering new skills!
+                </p>
+              </div>
 
-                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300">
-                    <span className="text-2xl text-white drop-shadow-lg">→</span>
-                  </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">
+                {dashboardCards.map((card) => (
+                  <Card
+                    key={card.id}
+                    className="group relative overflow-hidden border-0 shadow-xl hover:shadow-2xl transition-all duration-500 cursor-pointer transform hover:scale-105 hover:-translate-y-2"
+                    onClick={() => handleCardClick(card.id)}
+                  >
+                    <div className="absolute inset-0 bg-slate-800" />
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-br ${card.gradient} group-hover:${card.hoverGradient} transition-all duration-500`}
+                    />
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-500" />
 
-                  <CardContent className="relative z-10 p-8 h-48 flex flex-col justify-center items-center text-center text-slate-100">
-                    <div className="text-6xl mb-4 transform group-hover:scale-110 transition-transform duration-300 drop-shadow-lg">
-                      {card.icon}
+                    <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+                      <span className="text-2xl text-white drop-shadow-lg">→</span>
                     </div>
 
-                    <h3 className="text-2xl font-bold mb-2 text-white group-hover:text-slate-100 transition-colors drop-shadow-lg">
-                      {card.title}
-                    </h3>
+                    <CardContent className="relative z-10 p-8 h-48 flex flex-col justify-center items-center text-center text-slate-100">
+                      <div className="text-6xl mb-4 transform group-hover:scale-110 transition-transform duration-300 drop-shadow-lg">
+                        {card.icon}
+                      </div>
 
-                    <p className="text-white group-hover:text-slate-100 transition-colors text-sm drop-shadow-lg">
-                      {card.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
+                      <h3 className="text-2xl font-bold mb-2 text-white group-hover:text-slate-100 transition-colors drop-shadow-lg">
+                        {card.title}
+                      </h3>
+
+                      <p className="text-white group-hover:text-slate-100 transition-colors text-sm drop-shadow-lg">
+                        {card.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </div>
           )}
 
-          {currentView === "community" && <CommunitySection />}
-          {currentView === "gaming" && <GamingSection />}
-          {currentView === "learning" && <LearningSection />}
+          {currentView === "community" && <CommunitySection handleBackToDashboard={handleBackToDashboard} />}
+          {currentView === "gaming" && <GamingSection handleBackToDashboard={handleBackToDashboard} selectedSubject={selectedSubject} setSelectedSubject={setSelectedSubject} setCurrentView={setCurrentView} />}
+          {currentView === "learning" && <LearningSection handleBackToDashboard={handleBackToDashboard} selectedSubject={selectedSubject} setSelectedSubject={setSelectedSubject} selectedTopic={selectedTopic} setSelectedTopic={setSelectedTopic} />}
           {currentView === "challenges" && renderChallengesPage()}
           {currentView === "leaderboard" && renderLeaderboard()}
           {currentView === "streak" && renderStreakDashboardPage()}
           {currentView === "profile" && renderProfilePage()}
+          {currentView === "xp" && renderXPDashboard()}
           {currentView === "achievements" && renderAchievementsPage()}
           {currentView === "binary-blaster" && <BinaryBlaster />}
           {currentView === "shapes" && <Shapes />}
@@ -2387,3 +2581,5 @@ const LearningSection = ({ handleBackToDashboard, selectedSubject, setSelectedSu
 }
 
 export default StudentDashboard
+
+
