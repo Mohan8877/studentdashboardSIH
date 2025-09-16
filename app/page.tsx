@@ -645,7 +645,7 @@ const StudentDashboard = () => {
     )
   }
 
-  const GamingSection = ({ handleBackToDashboard, selectedSubject, setSelectedSubject, setCurrentView }: any) => {
+const GamingSection = ({ handleBackToDashboard, selectedSubject, setSelectedSubject, setCurrentView }: any) => {
   const subjects = [
     { name: "Mathematics", icon: "📊", color: "blue", progress: 75, gamesCompleted: 12, totalGames: 16 },
     { name: "Physics", icon: "⚡", color: "purple", progress: 60, gamesCompleted: 9, totalGames: 15 },
@@ -2377,6 +2377,9 @@ const LearningSection = ({ handleBackToDashboard, selectedSubject, setSelectedSu
           {currentView === "streak" && renderStreakDashboardPage()}
           {currentView === "profile" && renderProfilePage()}
           {currentView === "achievements" && renderAchievementsPage()}
+          {currentView === "binary-blaster" && <BinaryBlaster />}
+          {currentView === "shapes" && <Shapes />}
+          {currentView === "periodic-table" && <PeriodicTable />}
         </div>
       </main>
     </div>
